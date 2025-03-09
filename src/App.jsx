@@ -1,57 +1,43 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import ContactForm from "./components/ContactForm/ContactForm";
-import SearchBox from "./components/SearchBox/SearchBox";
+import css from './App.css';
+import { useState, useEffect } from 'react';
 import ContactList from "./components/ContactList/ContactList";
-
-const STORAGE_KEY = "contacts";
-const DEFAULT_CONTACTS = [
-  { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-  { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-  { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-  { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-];
+import SearchBox from "./components/SearchBox/SearchBox";
+import ContactForm from "./components/ContactForm/ContactForm";
 
 function App() {
   const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem(STORAGE_KEY);
-    if(savedContacts !== null) {
-      const parseContacts = JSON.parse(savedContacts);
-      if(parseContacts.length > 0) {
-        return parseContacts;
-      }
+    const savedContacts = window.localStorage.getItem('saved-contacts');
+    if (savedContacts !== null) {
+      return JSON.parse(savedContacts);
     }
-    return DEFAULT_CONTACTS;
+    return contactList;
   });
-
-  const [searchBox, setSearchBox] = useState("");
-  const handleChange = (newValue) => setSearchBox(newValue);
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
-   }, [contacts]); 
+    window.localStorage.setItem('saved-contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  const addContacts = (newContact) => {
-    setContacts((prevContacts) => [...prevContacts, newContact]);  
-    };
-
-  const deleteContact = (contactId) => {
-    setContacts((prevContacts) => 
-     prevContacts.filter((contact) => contact.id !== contactId)
-    );
+  const deleteContact = contactId => {
+    setContacts(prevContacts => {
+      return prevContacts.filter(contact => contact.id !== contactId);
+    });
   };
 
-  const searchUser = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchBox.toLowerCase())
-  );
-  
+  const addContact = newValues => {
+    setContacts(prevContacts => {
+      return [...prevContacts, newValues];
+    });
+  };
+
+  const searchContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
 
   return (
-    <div>
+    <div className={css.div}>
       <h1>Phonebook</h1>
-      <ContactForm onAdd={addContacts} />
-      <SearchBox value={searchBox} onSearch={handleChange} />
-      <ContactList contacts={searchUser} onDelete={deleteContact} />
+      <ContactForm addContact={addContact} />
+      <SearchBox value={filter} onValue={setFilter} />
+      <ContactList contactList={searchContacts} deleteContact={deleteContact} />
     </div>
   );
 }

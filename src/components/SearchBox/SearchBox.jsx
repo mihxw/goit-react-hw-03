@@ -1,17 +1,4 @@
-import css from "./SearchBox.module.css";
-
-export default function SearchBox({ value, onSearch }) {
-  return (
-    <div>
-      <p className={css.searchBox}>Find contacts by name</p>
-      <input
-        className={css.searchInput}
-        type="text"
-        name="name"
-        autoComplete="on"
-        value={value}
-        onChange={(e) => onSearch(e.target.value)}
-      />
-    </div>
-  );
+import css from './SearchBox.module.css';
+export default function SearchBox({ value, onValue }) {
+  return <input className={css.inp} type='text' value={value} onChange={evt => onValue(evt.target.value)} />;
 }
