@@ -1,8 +1,8 @@
-import css from './App.css';
+import css from '../App/App.css';
 import { useState, useEffect } from 'react';
-import ContactList from "./components/ContactList/ContactList";
-import SearchBox from "./components/SearchBox/SearchBox";
-import ContactForm from "./components/ContactForm/ContactForm";
+import ContactList from "../ContactList/ContactList.jsx";
+import SearchBox from "../SearchBox/SearchBox.jsx";
+import ContactForm from "../ContactForm/ContactForm.jsx";
 
 function App() {
   const [contacts, setContacts] = useState(() => {
